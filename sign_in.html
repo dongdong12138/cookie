@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录页面</title>
+
+</head>
+
+<body>
+    <h1>登录页面</h1>
+    <form action="" id="signInForm">
+        <label>
+            邮箱
+            <input type="text" name="email">
+            <span class="error"></span>
+        </label> <br>
+        <label>
+            密码
+            <input type="password" name="password">
+            <span class="error"></span>
+        </label> <br>
+        <input type="submit" value="登录">
+    </form>
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        let hash
+        $('#signInForm').on('submit', (e) => {
+            e.preventDefault()
+            hash = {}
+            let need = ['email', 'password']
+            need.forEach((name) => {
+                let value = $('#signInForm').find(`[name=${name}]`).val()
+                hash[name] = value
+            })
+
+            $('#signInForm').find('.error').each((index, value) => {
+                $(value).text('')
+            })
+            if (hash['email'] === '') {
+                $('#signInForm').find('[name=email]').next('.error').text('请输入邮箱')
+                return 
+            }
+            if (hash['password'] === '') {
+                $('#signInForm').find('[name=password]').next('.error').text('请输入密码')
+                return 
+            }
+
+            $.post('/sign_in', hash)
+                .then((response) => {
+                    window.location.href = '/'
+                }, (response) => {
+                    alert('邮箱与密码不匹配')
+                })
+        })
+        
+    </script>
+</body>
+
+</html>

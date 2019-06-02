@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+
+</head>
+
+<body>
+    <h1>注册页面</h1>
+    <form action="" id="signUpForm">
+        <label>
+            邮箱
+            <input type="text" name="email">
+            <span class="error"></span>
+        </label> <br>
+        <label>
+            密码
+            <input type="password" name="password">
+            <span class="error"></span>
+        </label> <br>
+        <label>
+            确认密码
+            <input type="password" name="password_confirmation" id="">
+            <span class="error"></span>
+        </label> <br>
+        <input type="submit" value="注册">
+    </form>
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        let hash
+        $('#signUpForm').on('submit', (e) => {
+            e.preventDefault()
+            hash = {}
+            let need = ['email', 'password', 'password_confirmation']
+            need.forEach((name) => {
+                let value = $('#signUpForm').find(`[name=${name}]`).val()
+                hash[name] = value
+            })
+
+            $('#signUpForm').find('.error').each((index, value) => {
+                $(value).text('')
+            })
+            if (hash['email'] === '') {
+                $('#signUpForm').find('[name=email]').next('.error').text('请输入邮箱')
+                return 
+            }
+            if (hash['password'] === '') {
+                $('#signUpForm').find('[name=password]').next('.error').text('请输入密码')
+                return 
+            }
+            if (hash['password_confirmation'] !== hash['password']) {
+                $('#signUpForm').find('[name=password_confirmation]').next('.error').text('两次输入密码不一致')
+                return 
+            }
+
+            $.post('/sign_up', hash)
+                .then((response) => {
+                    console.log(response)
+                }, (response) => {
+                    // let {errors} = JSON.parse(response.responseText)
+                    // console.log(errors)                    
+                    let {errors} = response.responseJSON
+                    console.log(errors)
+                    if (errors.email && errors.email === 'invalid') {
+                        $('#signUpForm').find('[name=email]').next('.error').text('邮箱格式错误')
+                    }
+                })
+        })
+        
+    </script>
+</body>
+
+</html>
