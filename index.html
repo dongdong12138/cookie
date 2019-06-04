@@ -8,5 +8,13 @@
 </head>
 <body>
     <h1>你的密码是：__password__</h1>
+
+    <script>
+        var already = localStorage.getItem('已经提示了')
+        if (!already) {
+            alert('网站改版了')
+            localStorage.setItem('已经提示了', true)
+        }
+    </script>
 </body>
 </html>
